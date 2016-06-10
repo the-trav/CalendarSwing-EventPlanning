@@ -3,7 +3,6 @@ class is called when any day is clicked on
  */
 package mypi.eventForm;
 
-import mypi.IO.WriteToFile;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -153,7 +152,7 @@ public class CreateEventForm extends JPanel {
     }
 
     private class OkayCancelListener implements ActionListener {
-        private final WriteToFile writingToFile = new WriteToFile();
+//        private final WriteToFile writingToFile = new WriteToFile();
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == okay) {
@@ -178,12 +177,12 @@ public class CreateEventForm extends JPanel {
                     }
                     String newEvent =getBillSelected+" "+getRadioValue;
                     pojo.setEvent(newEvent);
-                    writingToFile.writeEventToFile(pojo);
+                    EventLinkedList.instanceOf().add(pojo);
                 } 
                 else {//else means that 'other' was selected.
                     String titleOfDescription = descriptionTitle.getText();
                     pojo.setEvent(titleOfDescription);
-                    writingToFile.writeEventToFile(pojo);
+                    EventLinkedList.instanceOf().add(pojo);
                 }
             }
             else if (e.getSource() == cancel) {//if cancel is pressed do nothing

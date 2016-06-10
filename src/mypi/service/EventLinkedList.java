@@ -1,8 +1,12 @@
 package mypi.service;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Iterator;
+import mypi.IO.FileReadAndWrite;
 import mypi.pojo.Events;
 
 /**
@@ -10,7 +14,7 @@ import mypi.pojo.Events;
  * @author trav custom linked list that holds Events.java
  *
  */
-public class EventLinkedList implements Iterable<Events>, Serializable {
+public class EventLinkedList extends FileReadAndWrite implements Iterable<Events>, Serializable {
 
     private class Node implements Serializable {
 
@@ -59,9 +63,33 @@ public class EventLinkedList implements Iterable<Events>, Serializable {
     }
 
     private Node start;
+    private static EventLinkedList uniqueEventList = new EventLinkedList();
+//    public EventLinkedList() {
+//        start = null;
+//    }
+    private EventLinkedList() {
+        if (!getFile().exists()) {
+            start = null;
+        } else {//meaning file does exsist so there is eventList in the file
+            try (ObjectInputStream inputObject = getObjectInputStream()) {
+                uniqueEventList = (EventLinkedList) inputObject.readObject();
+                start=uniqueEventList.start;//setting start
+            } catch (IOException | ClassNotFoundException ex) {
+                System.out.println("List is loaded");
+            }
+        }//end of else
+    }
 
-    public EventLinkedList() {
-        start = null;
+    public static EventLinkedList instanceOf() {
+        return uniqueEventList;
+    }
+    
+    private void writeEventListToFile() {
+        try (ObjectOutputStream sendToFile = getObjectOutputStream()) {
+            sendToFile.writeObject(uniqueEventList);
+        } catch (IOException io) {
+            System.out.println("COULD NOT Write To File Error Check File path?!!");
+        }
     }
 
     /**
@@ -73,6 +101,7 @@ public class EventLinkedList implements Iterable<Events>, Serializable {
         Node currentNode = start;
         if (currentNode.event.toString().equals(eventToString)) {
             start = start.next;
+            writeEventListToFile();
             return;
         }
         Node previousNode = null;
@@ -87,6 +116,7 @@ public class EventLinkedList implements Iterable<Events>, Serializable {
         }
         //erasing the event in the list
         previousNode.next = currentNode.next;
+        writeEventListToFile();//writing to file after removing
     }
 
     /**
@@ -111,7 +141,9 @@ public class EventLinkedList implements Iterable<Events>, Serializable {
             }//end while   
             nodePointer.next = new Node(event, nodePointer.next);
         }
+        writeEventListToFile();//writing list to file after adding
     }
+
 
     public String toString() {
         StringBuilder formListString = new StringBuilder();

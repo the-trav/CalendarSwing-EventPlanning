@@ -1,7 +1,8 @@
-
+/**
+ *
+ */
 package mypi;
 
-import mypi.service.SendTextOnDayOfEvent;
 import mypi.diplayEventPanel.DisplayEvents;
 import mypi.calendarPanel.CalendarPanel;
 import java.awt.Dimension;
@@ -13,21 +14,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
-import mypi.IO.DataStructuresFromFile;
-import mypi.service.EventLinkedList;
 import mypi.service.CurrentTime;
 import mypi.quote.QuotesLibrary;
+import mypi.service.SendTextOnDayOfEvent;
 
 /**
  *
  * @author trav Main class that runs the calendar
- *
- * I decided to use a static accessor on <EventLinkedList thePlannedEventList> for the reasons being
- * of not having an expensive overhead of opening streams to read a file to load 
- * the list each time it needs to be accessed
  * 
- * <thePlannedEventList> is used in the followinig 4 classes:
- * RemoveItemFromList.java , WriteToFile.java, CalendarPanel.java, DisplayEvents.java, 
  */
 public class CalendarApp extends JFrame {
 
@@ -36,10 +30,8 @@ public class CalendarApp extends JFrame {
     private QuotesLibrary theQuoteBook = new QuotesLibrary();
     private int countForQuotePick, numberOfQuotes;
     private CalendarPanel calendarTab;
-    public static EventLinkedList thePlannedEventList;
 
     public CalendarApp() {
-        thePlannedEventList = new DataStructuresFromFile().loadEventsFromFile();
         
         numberOfQuotes = theQuoteBook.getLibrarySize() - 1;
         countForQuotePick = 0;

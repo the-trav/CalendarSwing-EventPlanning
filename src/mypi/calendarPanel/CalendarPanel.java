@@ -26,6 +26,7 @@ import javax.swing.border.Border;
 import mypi.CalendarApp;
 import mypi.diplayEventPanel.DisplayEvents;
 import mypi.pojo.Events;
+import mypi.service.EventLinkedList;
 import mypi.service.SendTextOnDayOfEvent;
 
 public class CalendarPanel extends JPanel {
@@ -138,7 +139,7 @@ public class CalendarPanel extends JPanel {
      */
        private void displayCalendarEvents() {
         try {
-            for (Events holdEvent : CalendarApp.thePlannedEventList){
+            for (Events holdEvent : EventLinkedList.instanceOf()){
                 String event = holdEvent.getEvent();
                 String month = holdEvent.getMonth();
                 String day = holdEvent.getDay();

@@ -16,9 +16,9 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import mypi.CalendarApp;
-import mypi.IO.RemoveItemFromList;
 
 import mypi.pojo.Events;
+import mypi.service.EventLinkedList;
 
 // in future create ListCellRenderer class
 // to customize and style up JList 
@@ -51,7 +51,7 @@ public class DisplayEvents extends JPanel {
 
     private void populateEventList() {
         try {
-            for (Events currentEvent : CalendarApp.thePlannedEventList) {
+            for (Events currentEvent : EventLinkedList.instanceOf()) {
                 eventModel.addElement(currentEvent.toString());
                 removeModel.addElement("Remove");
             }
@@ -96,8 +96,7 @@ public class DisplayEvents extends JPanel {
         @Override
         public void mouseClicked(MouseEvent e) {
             int index = removeList.getSelectedIndex();
-            RemoveItemFromList deletingEvent = new RemoveItemFromList();
-            deletingEvent.removeItem(eventModel.get(index).toString());
+            EventLinkedList.instanceOf().remove(eventModel.get(index).toString());
             removeModel.remove(index);
             eventModel.remove(index);
         }
