@@ -16,12 +16,14 @@ import java.io.ObjectOutputStream;
  */
 public abstract class FileReadAndWrite {
 private final File FILENAME = new File("Planned_Events_POJO.txt");
+//private final File TEST_FILE = new File("Testing_Events_POJO.txt");
     /**
      *
      * @return file that is being worked with
      */
     public File getFile() {
         return FILENAME;
+        //return TEST_FILE;//un comment for tests
     }
 
     /**
@@ -30,7 +32,7 @@ private final File FILENAME = new File("Planned_Events_POJO.txt");
      * @throws IOException 
      */
     public ObjectOutputStream getObjectOutputStream() throws IOException {
-        return new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(FILENAME)));
+        return new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream( getFile() )));
     }
 
     /**
@@ -40,6 +42,6 @@ private final File FILENAME = new File("Planned_Events_POJO.txt");
      * @throws EOFException
      */
     public ObjectInputStream getObjectInputStream() throws IOException, EOFException {
-        return new ObjectInputStream(new BufferedInputStream(new FileInputStream(FILENAME)));
+        return new ObjectInputStream(new BufferedInputStream(new FileInputStream( getFile() )));
     }
 }
