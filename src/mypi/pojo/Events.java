@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 public class Events implements Comparable<Events>, Serializable {
 
     private String event, month, day, year;
+    private static final long serialVersionUID = 1L;
 
 
     public Events(String event, String day, String month, String year) {
@@ -75,7 +76,6 @@ public class Events implements Comparable<Events>, Serializable {
                 if (valueOfSingleDigit < 10) {
                     NumberFormat formatter = new DecimalFormat("00");
                     String twoDigit = formatter.format(valueOfSingleDigit);
-                    //System.out.println(twoDigit +" this is it");
                     return twoDigit;
                 } else {
                     return String.valueOf(singleDigit);
@@ -144,7 +144,6 @@ public class Events implements Comparable<Events>, Serializable {
         Pattern theTHPattern = Pattern.compile(regexToSetTH);
         Matcher matchTH = theTHPattern.matcher(day);
         dayWithOrdinal.append(day);
-        //day.contains(regexToSetTH)
         if (matchTH.matches()){ 
             dayWithOrdinal.append("th");
         } else if (day.equals("01") || day.equals("21") || day.equals("31")) {
@@ -182,7 +181,6 @@ public class Events implements Comparable<Events>, Serializable {
 //http://javarevisited.blogspot.com/2011/11/how-to-override-compareto-method-in.html#ixzz48wP4WGJg
     @Override
     public int compareTo(Events otherEvent) {
-        //System.out.println(this.getDateOfEvent().compareTo(otherEvent.getDateOfEvent())+ "was the result from "+this.toString()+" compare to "+otherEvent.toString());
         return this.getDateOfEvent().compareTo(otherEvent.getDateOfEvent());
     }
 }
