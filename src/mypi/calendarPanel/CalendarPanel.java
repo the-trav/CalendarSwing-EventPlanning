@@ -1,6 +1,3 @@
-/**
- *
- */
 package mypi.calendarPanel;
 
 import java.awt.Color;
@@ -23,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
-import mypi.CalendarApp;
 import mypi.diplayEventPanel.DisplayEvents;
 import mypi.pojo.Events;
 import mypi.service.EventLinkedList;
@@ -33,7 +29,7 @@ public class CalendarPanel extends JPanel {
 
     private JButton nextMonth, previousMonth;//buttons used to navigate through months
     private int firstOfMonth;//is used as a placeholder to distribute the day grid accordingly
-    private GregorianCalendar tempCalendar = new GregorianCalendar();//temp is made to alter calendar when changing through the months
+    private GregorianCalendar tempCalendar;
     private final String[] daysOfWeek = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};//is populated into weekDayLabel
     Font monthFont = new Font("Bookman Old Style", Font.PLAIN, 60);
     Font buttonFont = new Font("Bookman Old Style", Font.ITALIC, 45);
@@ -41,10 +37,10 @@ public class CalendarPanel extends JPanel {
     private CalendarDayButton[] dayButton;
     private JTabbedPane theAppTabs;
     private DisplayEvents eventTab;
-    
-    //private int currentDay;
+    public static SendTextOnDayOfEvent sendReminder = new SendTextOnDayOfEvent();
 
-    public CalendarPanel(JTabbedPane theAppTabs, DisplayEvents eventTab) {
+    public CalendarPanel(JTabbedPane theAppTabs, DisplayEvents eventTab, GregorianCalendar tempCalendar) {
+        this.tempCalendar = tempCalendar;
         this.theAppTabs = theAppTabs;
         this.eventTab = eventTab;
         this.setLayout(new GridBagLayout());
@@ -150,7 +146,7 @@ public class CalendarPanel extends JPanel {
                 }
 
                 if( isThereAnEventOnTodaysDate(month, year, day) ){
-                    SendTextOnDayOfEvent sendReminder = new SendTextOnDayOfEvent(event);
+                    sendReminder.setEventOfToday(event);
                     sendReminder.sendTextReminders();
                 }
             }
