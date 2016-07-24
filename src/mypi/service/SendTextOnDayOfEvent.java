@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mypi.service;
 
-import mypi.service.SendText;
 
 /**
  *
@@ -22,24 +16,20 @@ import mypi.service.SendText;
 public class SendTextOnDayOfEvent  {
     private int sendText =1;
     private String VERIZON_NUMBER = "10digitphoneNumber@vtext.com";
+    private String eventOfToday;
 
     private SendText textTrav;
     public SendTextOnDayOfEvent(){
         
     }
-
     
-   /**
-    * 
-    * @param eventOfToday is the event that is planned that is about to be texted to you 
-    */
-    public SendTextOnDayOfEvent(String eventOfToday){
-        textTrav = new SendText(VERIZON_NUMBER,eventOfToday);
+    public void setEventOfToday(String event){
+        eventOfToday = event;
     }
     
     public void sendTextReminders (){
         if(sendText==0){
-            textTrav.sendText();
+            textTrav = new SendText(VERIZON_NUMBER,eventOfToday);
             sendText = 1;
         }    
     }
