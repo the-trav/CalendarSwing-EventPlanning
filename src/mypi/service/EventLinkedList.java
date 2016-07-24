@@ -18,6 +18,7 @@ public class EventLinkedList extends FileReadAndWrite implements Iterable<Events
 
     private class Node implements Serializable {
 
+        private static final long serialVersionUID = 1L;
         Events event;
         Node next;
 
@@ -64,9 +65,9 @@ public class EventLinkedList extends FileReadAndWrite implements Iterable<Events
 
     private Node start;
     private static EventLinkedList uniqueEventList = new EventLinkedList();
-//    public EventLinkedList() {
-//        start = null;
-//    }
+    private static final long serialVersionUID = 1L;
+    private int size;
+    
     private EventLinkedList() {
         if (!getFile().exists()) {
             start = null;
@@ -74,6 +75,7 @@ public class EventLinkedList extends FileReadAndWrite implements Iterable<Events
             try (ObjectInputStream inputObject = getObjectInputStream()) {
                 uniqueEventList = (EventLinkedList) inputObject.readObject();
                 start=uniqueEventList.start;//setting start
+                size=uniqueEventList.size;//setting size
             } catch (IOException | ClassNotFoundException ex) {
                 System.out.println("List is loaded");
             }
@@ -82,6 +84,10 @@ public class EventLinkedList extends FileReadAndWrite implements Iterable<Events
 
     public static EventLinkedList instanceOf() {
         return uniqueEventList;
+    }
+    
+    public int getSize(){
+        return size;
     }
     
     private void writeEventListToFile() {
@@ -102,6 +108,7 @@ public class EventLinkedList extends FileReadAndWrite implements Iterable<Events
         if (currentNode.event.toString().equals(eventToString)) {
             start = start.next;
             writeEventListToFile();
+            size--;
             return;
         }
         Node previousNode = null;
@@ -116,6 +123,7 @@ public class EventLinkedList extends FileReadAndWrite implements Iterable<Events
         }
         //erasing the event in the list
         previousNode.next = currentNode.next;
+        size--;
         writeEventListToFile();//writing to file after removing
     }
 
@@ -132,7 +140,6 @@ public class EventLinkedList extends FileReadAndWrite implements Iterable<Events
             start = new Node(event);
         } else if (event.compareTo(start.event) <= -1) {//seeing if new event is before the current sorted event
             start = new Node(event, start);
-
         } else {
             Node nodePointer = start;
             //finding the location where @param event fits in sorted order
@@ -141,6 +148,7 @@ public class EventLinkedList extends FileReadAndWrite implements Iterable<Events
             }//end while   
             nodePointer.next = new Node(event, nodePointer.next);
         }
+        size++;
         writeEventListToFile();//writing list to file after adding
     }
 
