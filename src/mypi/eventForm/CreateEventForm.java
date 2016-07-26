@@ -3,6 +3,8 @@ class is called when any day is clicked on
  */
 package mypi.eventForm;
 
+import java.awt.Font;
+import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -28,8 +30,8 @@ public class CreateEventForm extends JPanel {
 
     private JLabel monthLabel, dayLabel, yearLabel;
     private final Box eventBox;
-    private final JButton okay, cancel;
-    private final JComboBox billsBox;
+    private JButton okay, cancel;
+    private JComboBox billsBox;
     private final String[] bills = {"Comcast", "Electric", "Gas", "Phone", "Insurance", "Other"};
     private final String[] quickPaymentAmount = {"$20", "$80", "$54.99", "$104.46", "$120", "$122.96", "$140", "$160", "Other"};
     private final JRadioButton paymentsButton[] = new JRadioButton[quickPaymentAmount.length];
@@ -39,6 +41,8 @@ public class CreateEventForm extends JPanel {
     private Box horizontal5;//used for setting up manualInput text box in approprite location
     private final JTabbedPane theAppTabs;
     private Events pojo;
+    private EmptyBorder padding = new EmptyBorder(10, 0, 10, 0);
+    private Font font = new Font("Bookman Old Style", Font.PLAIN, 20);
 
     /**
      * 
@@ -46,42 +50,22 @@ public class CreateEventForm extends JPanel {
      * @param theAppTabs is called to control the tabs in CalendarApp
     */
     
-    public CreateEventForm(Events pojo,JTabbedPane theAppTabs){
+    public CreateEventForm(Events pojo, JTabbedPane theAppTabs) {
         this.theAppTabs = theAppTabs;
         this.pojo = pojo;
-        OkayCancelListener okayCancelChanger = new OkayCancelListener();
-        ComboBoxListener comboChanger = new ComboBoxListener();
         eventBox = Box.createVerticalBox();
-        //provide the label of the current day of the event
-        JPanel topPanel = new JPanel();
-        monthLabel = new JLabel( pojo.getMonth() );
-        dayLabel = new JLabel(pojo.getDay());
-        yearLabel = new JLabel(pojo.getYear());
-        topPanel.add(monthLabel);
-        topPanel.add(dayLabel);
-        topPanel.add(yearLabel);
+        JPanel topLayer = createTopLayer(pojo);
 
-        JPanel secondLayer = new JPanel();
-        JLabel questionToUser = new JLabel("What Would You Like To Plan?");
-        secondLayer.add(questionToUser);
+        JPanel secondLayer = createSecondLayer();
 
-        JPanel thirdLayer = new JPanel();
-        billsBox = new JComboBox(bills);
-        billsBox.addActionListener(comboChanger);
-        thirdLayer.add(billsBox);
+        JPanel thirdLayer = createThirdLayer();
 
         descriptionPanel = new JPanel();
         displayRadioButton();
 
-        JPanel decisionPanel = new JPanel();
-        okay = new JButton("Okay");
-        cancel = new JButton("Cancel");
-        okay.addActionListener(okayCancelChanger);
-        cancel.addActionListener(okayCancelChanger);
-        decisionPanel.add(cancel);
-        decisionPanel.add(okay);
+        JPanel decisionPanel = createOkayAndCancelButtons();
 
-        eventBox.add(topPanel);
+        eventBox.add(topLayer);
         eventBox.add(secondLayer);
         eventBox.add(thirdLayer);
         eventBox.add(descriptionPanel);
@@ -92,36 +76,114 @@ public class CreateEventForm extends JPanel {
 
     }
 
-
+    /**
+     * 
+     * @return panel containing drop down menu 
+     */
+    private JPanel createThirdLayer() {
+        ComboBoxListener comboChanger = new ComboBoxListener();
+        JPanel thirdLayer = new JPanel();
+        billsBox = new JComboBox(bills);
+        billsBox.addActionListener(comboChanger);
+        thirdLayer.add(billsBox);
+        thirdLayer.setBorder(padding);
+        return thirdLayer;
+    }
 
     /**
-     * method is used if Comcast , Electric ,gas, phone or insurance is selected
+     * 
+     * @return panel containing message to user
+     */
+    private JPanel createSecondLayer() {
+        JPanel secondLayer = new JPanel();
+        JLabel questionToUser = new JLabel("What Would You Like To Plan?");
+        questionToUser.setFont(font);
+        secondLayer.add(questionToUser);
+        secondLayer.setBorder(padding);
+        return secondLayer;
+    }
+
+    /**
+     * 
+     * @param pojo1
+     * @return panel containing the month day year of which the event is about to be planned on
+     */
+    private JPanel createTopLayer(Events pojo1) {
+        //provide the label of the current day of the event
+        JPanel topPanel = new JPanel();
+        monthLabel = new JLabel(pojo1.getMonth());
+        dayLabel = new JLabel(pojo1.getDay());
+        yearLabel = new JLabel(pojo1.getYear());
+        monthLabel.setFont(font);
+        dayLabel.setFont(font);
+        yearLabel.setFont(font);
+        topPanel.add(monthLabel);
+        topPanel.add(dayLabel);
+        topPanel.add(yearLabel);
+        return topPanel;
+    }
+
+    /**
+     * 
+     * @return panel containing two button 'okay' and 'cancel'
+     */
+    private JPanel createOkayAndCancelButtons() {
+        OkayCancelListener okayCancelChanger = new OkayCancelListener();
+        JPanel decisionPanel = new JPanel();
+        okay = new JButton("Okay");
+        cancel = new JButton("Cancel");
+        okay.setFont(font);
+        cancel.setFont(font);
+        okay.addActionListener(okayCancelChanger);
+        cancel.addActionListener(okayCancelChanger);
+        decisionPanel.add(cancel);
+        decisionPanel.add(okay);
+        decisionPanel.setBorder(padding);
+        return decisionPanel;
+    }
+    
+    /**
+     * sets up the radio buttons, groups them, and adds padding.
      */
     private void displayRadioButton() {
+        EmptyBorder horizontalPadding = new EmptyBorder(0, 10, 0, 10);
         ButtonGroup quickPaymentGroup = new ButtonGroup();
         RadioButtonListener radioGroupListener = new RadioButtonListener();
         Box vertical = Box.createVerticalBox();
         Box horizontal = Box.createHorizontalBox();
+        horizontal.setBorder(padding);
         Box horizontal2 = Box.createHorizontalBox();
+        horizontal2.setBorder(padding);
         Box horizontal3 = Box.createHorizontalBox();
+        horizontal3.setBorder(padding);
         Box horizontal4 = Box.createHorizontalBox();
+        horizontal4.setBorder(padding);
         horizontal5 = Box.createHorizontalBox();
+
         for (int i = 0; i < paymentsButton.length; i++) {
             if (i < 2) {
                 quickPaymentGroup.add(paymentsButton[i] = new JRadioButton(quickPaymentAmount[i]));
+                paymentsButton[i].setFont(font);
                 paymentsButton[i].addActionListener(radioGroupListener);
+                paymentsButton[i].setBorder(horizontalPadding);
                 horizontal.add(paymentsButton[i]);
             } else if (i >= 2 && i < 4) {
                 quickPaymentGroup.add(paymentsButton[i] = new JRadioButton(quickPaymentAmount[i]));
                 paymentsButton[i].addActionListener(radioGroupListener);
+                paymentsButton[i].setFont(font);
+                paymentsButton[i].setBorder(horizontalPadding);
                 horizontal2.add(paymentsButton[i]);
             } else if (i >= 4 && i < 6) {
                 quickPaymentGroup.add(paymentsButton[i] = new JRadioButton(quickPaymentAmount[i]));
                 paymentsButton[i].addActionListener(radioGroupListener);
+                paymentsButton[i].setFont(font);
+                paymentsButton[i].setBorder(horizontalPadding);
                 horizontal3.add(paymentsButton[i]);
             } else {
                 quickPaymentGroup.add(paymentsButton[i] = new JRadioButton(quickPaymentAmount[i]));
                 paymentsButton[i].addActionListener(radioGroupListener);
+                paymentsButton[i].setFont(font);
+                paymentsButton[i].setBorder(horizontalPadding);
                 horizontal4.add(paymentsButton[i]);
             }
         }//end for loop
